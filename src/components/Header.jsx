@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Github } from 'lucide-react';
+import { ShieldCheck, Code2 } from 'lucide-react';
 import './Header.css';
 
 const Header = () => {
@@ -19,8 +19,8 @@ const Header = () => {
         
         <div className="actions-group">
           <button className="btn-secondary btn-small">
-            <Github size={18} style={{ marginRight: '8px' }} />
-            Star on GitHub
+            <Code2 size={18} style={{ marginRight: '8px' }} />
+            View Repository
           </button>
         </div>
       </div>
