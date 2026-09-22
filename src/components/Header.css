@@ -9,6 +9,10 @@
   padding: 12px 24px;
 }
 
+.header.glass-panel:hover {
+  transform: translate(-50%, -4px);
+}
+
 .header-container {
   display: flex;
   justify-content: space-between;
