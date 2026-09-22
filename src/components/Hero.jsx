@@ -1,8 +1,27 @@
-import React from 'react';
-import { Terminal, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Terminal, Zap, Loader2, AlertCircle } from 'lucide-react';
 import './Hero.css';
 
 const Hero = () => {
+  const [code, setCode] = useState("def authenticate_user(username, password):\n    # TODO: Implement secure hashing\n    if password == 'admin123':\n        return True\n    return False");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const handleReview = () => {
+    if (!code.trim()) return;
+    setIsAnalyzing(true);
+    setResult(null);
+    
+    // Simulate API call to backend
+    setTimeout(() => {
+      setIsAnalyzing(false);
+      setResult({
+        severity: 'High',
+        message: 'Security Vulnerability: Hardcoded credentials detected. Passwords should never be stored or compared in plain text. Use a secure hashing algorithm like bcrypt.'
+      });
+    }, 1500);
+  };
+
   return (
     <section className="hero-section">
       <div className="container hero-container">
@@ -19,42 +38,53 @@ const Hero = () => {
             Buggers is a massive, highly relevant agentic system that understands your codebase structure, executes tools asynchronously, and roots out bugs with vector-based precision.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary">
-              <Zap size={20} style={{ marginRight: '8px' }} />
-              Initialize Engine
-            </button>
-            <button className="btn-secondary">
+            <a href="#triage" className="btn-secondary">
               <Terminal size={20} style={{ marginRight: '8px' }} />
               View Architecture
-            </button>
+            </a>
           </div>
         </div>
         
-        <div className="hero-visual animate-float">
+        <div className="hero-visual">
           <div className="glass-panel code-window">
             <div className="window-header">
               <span className="dot red"></span>
               <span className="dot yellow"></span>
               <span className="dot green"></span>
-              <span className="window-title">Buggers - PR Review Agent</span>
+              <span className="window-title">Buggers - Interactive Review</span>
             </div>
-            <pre className="code-content">
-              <code>
-<span className="token-keyword">import</span> {'{'} ChromaDB, CodeAgent {'}'} <span className="token-keyword">from</span> <span className="token-string">'@buggers/core'</span>;
-<br/><br/>
-<span className="token-comment">// Incoming PR Webhook Detected</span>
-<span className="token-keyword">const</span> prDiff = <span className="token-function">fetchGithubDiff</span>(webhook);
-<br/>
-<span className="token-keyword">const</span> analysis = <span className="token-keyword">await</span> CodeAgent.<span className="token-function">analyze</span>(prDiff, {'{'}
-  sandbox: <span className="token-string">'Docker'</span>,
-  memory: ChromaDB,
-  tools: [<span className="token-string">'ast-grep'</span>, <span className="token-string">'eslint'</span>]
-{'}'});
-<br/><br/>
-<span className="token-comment">// Result: Logical flaw found in authentication flow.</span>
-<span className="token-function">postInlineComments</span>(analysis.findings);
-              </code>
-            </pre>
+            <div className="editor-container">
+              <textarea 
+                className="code-input"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Paste your code here..."
+                spellCheck="false"
+              />
+            </div>
+            
+            <div className="review-actions">
+              <button 
+                className="btn-primary" 
+                onClick={handleReview}
+                disabled={isAnalyzing}
+              >
+                {isAnalyzing ? (
+                  <><Loader2 size={18} className="spin" style={{ marginRight: '8px' }} /> Analyzing...</>
+                ) : (
+                  <><Zap size={18} style={{ marginRight: '8px' }} /> Review Code</>
+                )}
+              </button>
+            </div>
+
+            {result && (
+              <div className="review-result">
+                <AlertCircle className="result-icon" size={20} />
+                <div className="result-text">
+                  <strong>{result.severity} Risk:</strong> {result.message}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
